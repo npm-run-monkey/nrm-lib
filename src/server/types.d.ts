@@ -6,10 +6,8 @@ interface QueryRes<T>
 
 interface User
 {
-    id: number;
-    cid: number;
+    cid: string,
     name: string;
     license: string;
     steam: string;
-    location: string;
 }

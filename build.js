@@ -37,6 +37,7 @@ dependencies {
     '/server:7290',
     '/onesync',
     'nrm-db',
+    'nrm-lifeline'
 }
 
 client_script 'src/client/**/*.lua'

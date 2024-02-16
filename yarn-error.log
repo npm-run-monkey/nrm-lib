@@ -1,0 +1,61 @@
+Arguments: 
+  E:\FXServer\server-build-v7436\FXServer.exe E:\FXServer\resources\[cfx]\[system]\[builders]\yarn\yarn_cli.js install --ignore-scripts --cache-folder E:\FXServer\cache\yarn-cache --mutex file:E:\FXServer\cache\yarn-mutex
+
+PATH: 
+  C:\Program Files\Common Files\Oracle\Java\javapath;C:\Python311\Scripts\;C:\Python311\;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Windows\System32\OpenSSH\;C:\ProgramData\chocolatey\bin;C:\Program Files\NVIDIA Corporation\NVIDIA NvDLISR;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\Program Files\Git\cmd;C:\Program Files\nodejs\;C:\Program Files\Go\bin;C:\Program Files\PuTTY\;C:\Users\reset\AppData\Local\pnpm;C:\Users\reset\AppData\Local\Microsoft\WindowsApps;C:\Users\reset\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\reset\AppData\Roaming\npm;C:\Users\reset\go\bin;C:\Users\reset\.encore\bin;C:\Users\reset\AppData\Local\GitHubDesktop\bin
+
+Yarn version: 
+  1.22.5
+
+Node version: 
+  16.9.1
+
+Platform: 
+  win32 x64
+
+Trace: 
+  Error: EPERM: operation not permitted, unlink 'E:\FXServer\resources\[v]\nrm-lib\node_modules\@esbuild\win32-x64\esbuild.exe'
+
+npm manifest: 
+  {
+    "name": "fivem-typescript-boilerplate",
+    "author": "Overextended",
+    "version": "0.0.0",
+    "license": "",
+    "description": "",
+    "type": "module",
+    "scripts": {
+      "build": "node build.js --mode=production",
+      "watch": "node build.js"
+    },
+    "keywords": [
+      "fivem"
+    ],
+    "repository": {
+      "type": "git",
+      "url": "https://github.com/overextended/fivem-typescript-boilerplate.git"
+    },
+    "bugs": "https://github.com/overextended/fivem-typescript-boilerplate/issues",
+    "devDependencies": {
+      "@citizenfx/client": "latest",
+      "@citizenfx/server": "latest",
+      "@types/node": "^20.11.5",
+      "esbuild": "^0.19.11",
+      "prettier": "^3.2.4",
+      "typescript": "^5.3.3"
+    },
+    "dependencies": {
+      "@nativewrappers/client": "latest",
+      "@nativewrappers/fivem-server": "latest",
+      "@overextended/ox_lib": "latest"
+    },
+    "engines": {
+      "node": ">=16.9.1"
+    }
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile

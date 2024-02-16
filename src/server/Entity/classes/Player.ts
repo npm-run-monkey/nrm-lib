@@ -1,22 +1,31 @@
 // Default
 import Entity from "Entity/Entity";
 
-// Helpers
-import pService from "Entity/service/Player.service";
+// Database
+import DBPlayer from "Entity/db/player.db";
 
 class Player extends Entity
 {
-    private readonly license: string;
-    private readonly steam: string;
-    private readonly name: string;
+    private cid: string;
+    private name: string;
+    private license: string;
+    private steam: string;
 
     constructor(pNetId: number)
     {
         super(pNetId);
 
-        this.license  =  pService.getLicense(this.getNetId());
-        this.steam    =  pService.getSteam(this.getNetId());
-        this.name     =  pService.getPlayerName(this.getNetId());
+        this.fetchPlayerData();
+    }
+
+    public getCid = (): string =>
+    {
+        return this.cid;
+    }
+
+    public getName = (): string =>
+    {
+        return this.name;
     }
 
     public getLicense = (): string =>
@@ -29,9 +38,16 @@ class Player extends Entity
         return this.steam;
     }
 
-    public getName = (): string =>
+    private fetchPlayerData = async (): Promise<void> =>
     {
-        return this.name;
+        const user = await DBPlayer.createDBPlayer(this.getNetId());
+
+        this.cid = user.cid;
+        this.name = user.name; 
+        this.license = user.license;
+        this.steam = user.steam;
+
+        emit('nrm-lib:server:server:playerObjCreated', this.cid);
     }
 }
 
