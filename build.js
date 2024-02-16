@@ -36,6 +36,7 @@ game 'gta5'
 dependencies {
     '/server:7290',
     '/onesync',
+    'nrm-db',
 }
 
 client_script 'src/client/**/*.lua'
