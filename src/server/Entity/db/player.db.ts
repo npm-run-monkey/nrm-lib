@@ -20,17 +20,20 @@ class DBPlayer
                 res(user);
             }
 
-            const user: User = 
+            if (!exists)
             {
-                cid: uuidv4(),
-                name: pService.getPlayerName(pNetId),
-                license: license,
-                steam: pService.getSteam(pNetId)
+                const user: User = 
+                {
+                    cid: uuidv4(),
+                    name: pService.getPlayerName(pNetId),
+                    license: license,
+                    steam: pService.getSteam(pNetId)
+                }
+    
+                global.exports['nrm-db'].executeQuery(`INSERT INTO users (cid, name, license, steam) VALUES ('${user.cid}', '${user.name}', '${user.license}', '${user.steam}')`);
+    
+                res(user);
             }
-
-            global.exports['nrm-db'].executeQuery(`INSERT INTO users (cid, name, license, steam) VALUES ('${user.cid}', '${user.name}', '${user.license}', '${user.steam}')`);
-
-            res(user);
         });
     }
 
