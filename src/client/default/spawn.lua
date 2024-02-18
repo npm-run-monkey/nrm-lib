@@ -82,24 +82,42 @@ local function spawnPlayer(spawn)
     freezePlayer(PlayerId(), false)
 end
 
+RegisterNetEvent('nrm-lib:server:client:spawnPlayer')
+
+AddEventHandler('nrm-lib:server:client:spawnPlayer', function(coords)
+    if (type(coords) == "string") then
+        coords = json.decode(coords)
+    end
+
+    spawnPlayer({    
+        x = coords.x,
+        y = coords.y,
+        z = coords.z,
+        heading = coords.h,
+    })
+end)
+
 Citizen.CreateThread(function()
     local ped = PlayerPedId();
 
     --if (not exports['nrm-lifeline'].getDefault()) then return end
 
     while true do
+        Citizen.Wait(500)
         if (NetworkIsPlayerActive(PlayerId())) then
             DisplayRadar(false);
 
             SetCanAttackFriendly(ped, true, true);
             NetworkSetFriendlyFireOption(true);
 
-            spawnPlayer({    
-                x = 466.8401,
-                y = 197.7201,
-                z = 111.5291,
-                heading = 291.71,
-            })
+            -- spawnPlayer({    
+            --     x = 466.8401,
+            --     y = 197.7201,
+            --     z = 111.5291,
+            --     heading = 291.71,
+            -- })
+
+            TriggerServerEvent('nrm-lib:client:server:NetworkActive')
 
             exports["nrm-lifeline"].setDefault(true);
             return;
