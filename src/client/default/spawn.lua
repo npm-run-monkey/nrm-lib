@@ -31,7 +31,6 @@ local function freezePlayer(id, freeze)
 end
 
 local function spawnPlayer(spawn)
-
     spawn.x = spawn.x + 0.00
     spawn.y = spawn.y + 0.00
     spawn.z = spawn.z + 0.00
@@ -63,7 +62,7 @@ local function spawnPlayer(spawn)
     NetworkResurrectLocalPlayer(spawn.x, spawn.y, spawn.z, spawn.heading, true, true, false)
     ClearPlayerWantedLevel(PlayerId())
 
-    TriggerServerEvent('nrm-lib:client:server:playerSpawned');
+    TriggerServerEvent('nrm-lib:client:server:playerSpawned', GetPlayerServerId(PlayerId()));
 
     local time = GetGameTimer()
 
@@ -86,7 +85,7 @@ end
 Citizen.CreateThread(function()
     local ped = PlayerPedId();
 
-    if (not exports['nrm-lifeline'].getDefault()) then return end
+    --if (not exports['nrm-lifeline'].getDefault()) then return end
 
     while true do
         if (NetworkIsPlayerActive(PlayerId())) then

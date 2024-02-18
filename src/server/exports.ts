@@ -4,16 +4,18 @@ global.exports('getPlayerCid', (pNetId: number): Promise<string> =>
 {
     return new Promise(async (res, rej) =>
     {
-        const cid = (await Core.findPlayer(pNetId)).getCid();
-
-        if (cid)
+        try
         {
-            res(cid);
+            const cid = (await Core.findPlayer(pNetId)).getCid();
+
+            if (cid)
+            {
+                res(cid);
+            }
         }
-
-        if (cid == null)
+        catch(e)
         {
-            rej("Coudn't find player's Cid ...");
+            rej(`[Func getPlayerCid] - Couldn't find player's Cid ... ${e}`);
         }
     });
 });

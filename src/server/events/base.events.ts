@@ -1,10 +1,19 @@
 // Default
-import Entity from "Entity/Entity";
+import Core from "Core/Core";
 
 // Helpers
-import Player from "Entity/classes/Player";
+import Utils from "Utils/Utils";
 
 on('playerJoining', () =>
 {
-    const player: Entity = new Player(global.source);
+    Core.constructPlayer(global.source);
 });
+
+on('onServerResourceStart', async (resource: string) =>
+{
+    if (resource === GetCurrentResourceName())
+    {
+        await Utils.Delay(500);
+        emitNet('nrm-lib:server:client:restart', -1);
+    }
+})

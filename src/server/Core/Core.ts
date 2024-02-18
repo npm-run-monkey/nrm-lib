@@ -26,7 +26,7 @@ class Core
 
     public findPlayer = (pNetId: number): Promise<Player> =>
     {
-        return new Promise((res, _) =>
+        return new Promise(async (res, rej) =>
         {
             this.entities.forEach((entity: Entity) =>
             {
@@ -38,7 +38,7 @@ class Core
                     }
                 }
             });
-            res(null);
+            rej(null);
         });
     }
 
