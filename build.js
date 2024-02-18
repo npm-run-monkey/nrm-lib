@@ -40,8 +40,15 @@ dependencies {
     'nrm-lifeline'
 }
 
+ui_page 'nui/web/build/index.html'
+
 client_script 'src/client/**/*.lua'
 server_script 'bin/server.js'
+
+files {
+	'nui/web/build/index.html',
+	'nui/web/build/**/*',
+}
 
 `
 );
