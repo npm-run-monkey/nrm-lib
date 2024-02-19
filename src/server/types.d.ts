@@ -12,7 +12,7 @@ interface User
     steam: string;
 }
 
-interface Vehicle
+interface TVehicle
 {
     netId: number;
     owner: string;

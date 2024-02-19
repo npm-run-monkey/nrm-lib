@@ -3,9 +3,17 @@ import Entity from "Entity/Entity";
 
 class Vehicle extends Entity
 {
-    constructor(vNetId: number)
+    private readonly model: string;
+    private readonly plate: string;
+    private readonly owner: number;
+
+    constructor(veh: TVehicle)
     {
-        super(vNetId);
+        super(veh.netId);
+
+        this.model = veh.model;
+        this.owner = veh.netId;
+        this.plate = veh.plate;
     }
 }
 

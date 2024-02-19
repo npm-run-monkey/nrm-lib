@@ -1,7 +1,7 @@
 class DBVehicle
 {
 
-    public static createVehicleDB = async (vNetId: number, cid: string, model: string): Promise<Vehicle> =>
+    public static createVehicleDB = async (vNetId: number, cid: string, model: string): Promise<TVehicle> =>
     {
         return new Promise(async (res, rej) =>
         {
@@ -10,7 +10,7 @@ class DBVehicle
             if (exists)
             {
                 // Get the vehicle credentials from the database
-                const resp: QueryRes<Vehicle> = await global.exports["nrm-db"].executeAsyncQuery(`SELECT * FROM vehicles WHERE model='${model}'`);
+                const resp: QueryRes<TVehicle> = await global.exports["nrm-db"].executeAsyncQuery(`SELECT * FROM vehicles WHERE model='${model}'`);
 
                 if (resp.rowCount > 0)
                 {
@@ -18,7 +18,7 @@ class DBVehicle
                 }
             }
 
-            const vehicle: Vehicle = 
+            const vehicle: TVehicle = 
             {
                 netId: vNetId,
                 owner: cid,
@@ -26,7 +26,7 @@ class DBVehicle
                 plate: GetVehicleNumberPlateText(vNetId)
             }
 
-            res(vehicle)
+            res(vehicle);
         });
     }
 
@@ -38,7 +38,7 @@ class DBVehicle
         })
     }
 
-    private static loadVehicleData = (): Promise<Vehicle> => 
+    private static loadVehicleData = (): Promise<TVehicle> => 
     {
         return new Promise(async (res, rej) => 
         {

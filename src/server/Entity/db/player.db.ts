@@ -20,6 +20,7 @@ class DBPlayer
                 {
                     const user: User = await DBPlayer.loadPlayerData(license);
                     res(user);
+                    return;
                 }
     
                 const user: User = 
