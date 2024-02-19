@@ -12,6 +12,14 @@ interface User
     steam: string;
 }
 
+interface Vehicle
+{
+    netId: number;
+    owner: string;
+    model: string;
+    plate: string;
+}
+
 interface SpawnCoords
 {
     x: number;
