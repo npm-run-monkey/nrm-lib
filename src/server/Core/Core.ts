@@ -2,9 +2,6 @@
 import Entity from "Entity/Entity";
 import Player from "Entity/classes/Player";
 
-// Helpers
-import SpawnManager from "default/SpawnManager";
-
 class Core
 {
 
@@ -29,16 +26,23 @@ class Core
 
     public destructPlayer = async (pNetId: number): Promise<void> =>
     {
-        const player: Entity = await this.findPlayer(pNetId);
-
-        if (player instanceof Player)
+        try
         {
-            const index = this.entities.indexOf(player);
+            const player: Entity = await this.findPlayer(pNetId);
 
-            if (index > -1)
+            if (player instanceof Player)
             {
-                this.entities.splice(index, 1);
+                const index = this.entities.indexOf(player);
+    
+                if (index > -1)
+                {
+                    this.entities.splice(index, 1);
+                }
             }
+        }
+        catch(e)
+        {
+            console.log(`Error occurred: ${e}`);
         }
     }
 
@@ -56,7 +60,7 @@ class Core
                     }
                 }
             });
-            rej(null);
+            rej(`Couldn't find players Cid ...`);
         });
     }
 

@@ -40,14 +40,21 @@ class Player extends Entity
 
     private fetchPlayerData = async (): Promise<void> =>
     {
-        const user = await DBPlayer.createDBPlayer(this.getNetId());
+        try
+        {
+            const user = await DBPlayer.createDBPlayer(this.getNetId());
 
-        this.cid = user.cid;
-        this.name = user.name; 
-        this.license = user.license;
-        this.steam = user.steam;
-
-        emit('nrm-lib:server:server:playerObjCreated', this.cid);
+            this.cid = user.cid;
+            this.name = user.name; 
+            this.license = user.license;
+            this.steam = user.steam;
+    
+            emit('nrm-lib:server:server:playerObjCreated', this.cid);
+        }
+        catch(e)
+        {
+            console.log(`Error occurred: ${e}`);
+        }
     }
 }
 

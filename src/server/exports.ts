@@ -15,7 +15,7 @@ global.exports('getPlayerCid', (pNetId: number): Promise<string> =>
         }
         catch(e)
         {
-            rej(`[Func getPlayerCid] - Couldn't find player's Cid ... ${e}`);
+            rej(e);
         }
     });
 });

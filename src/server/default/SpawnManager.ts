@@ -1,12 +1,5 @@
 class SpawnManager
 {
-    private spawnRoom: number[];
-
-    constructor()
-    {
-        this.spawnRoom = new Array<number>();
-    }
-
     public spawnPlayer = async (pNetId: number): Promise<void> =>
     {
         try

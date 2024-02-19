@@ -10,18 +10,18 @@ class DBPlayer
     {
         const license = pService.getLicense(pNetId);
 
-        return new Promise(async (res, _) =>
+        return new Promise(async (res, rej) =>
         {
-            const exists = await DBPlayer.doesPlayerExists(license);
-
-            if (exists)
+            try
             {
-                const user: User = await DBPlayer.loadPlayerData(license);
-                res(user);
-            }
+                const exists = await DBPlayer.doesPlayerExists(license);
 
-            if (!exists)
-            {
+                if (exists)
+                {
+                    const user: User = await DBPlayer.loadPlayerData(license);
+                    res(user);
+                }
+    
                 const user: User = 
                 {
                     cid: uuidv4(),
@@ -29,34 +29,52 @@ class DBPlayer
                     license: license,
                     steam: pService.getSteam(pNetId)
                 }
-    
+        
                 global.exports['nrm-db'].executeQuery(`INSERT INTO users (cid, name, license, steam) VALUES ('${user.cid}', '${user.name}', '${user.license}', '${user.steam}')`);
-    
+        
                 res(user);
+            }
+            catch(e)
+            {
+                rej(e);
             }
         });
     }
 
     private static loadPlayerData = (license: string): Promise<User> =>
     {
-        return new Promise(async (res, _) =>
+        return new Promise(async (res, rej) =>
         {   
-            const user: QueryRes<User> = await global.exports['nrm-db'].executeAsyncQuery(`SELECT * FROM users WHERE license='${license}'`);
-            res(user.rows[0]);
+            try
+            {
+                const user: QueryRes<User> = await global.exports['nrm-db'].executeAsyncQuery(`SELECT * FROM users WHERE license='${license}'`);
+                res(user.rows[0]);
+            }
+            catch(e)
+            {
+                rej(e);
+            }
         });
     }
 
     private static doesPlayerExists = (license: string): Promise<boolean> =>
     {
-        return new Promise(async (res, _) =>
+        return new Promise(async (res, rej) =>
         {
-            const result: QueryRes<string> = await global.exports['nrm-db'].executeAsyncQuery(`SELECT cid FROM users WHERE license='${license}'`);
-
-            if (result.rowCount > 0)
+            try
             {
-                res(true);
+                const result: QueryRes<string> = await global.exports['nrm-db'].executeAsyncQuery(`SELECT cid FROM users WHERE license='${license}'`);
+
+                if (result.rowCount > 0)
+                {
+                    res(true);
+                }
+                res(false);
             }
-            res(false);
+            catch(e)
+            {
+                rej(e);
+            }
         });
     }
 }
