@@ -4,9 +4,11 @@ import Entity from "Entity/Entity";
 // Helpers
 import Player from "Entity/classes/Player";
 import Vehicle from "Entity/classes/Vehicle";
+import Ped from "../Entity/classes/Ped";
 
 // Service
 import vService from "Entity/service/Vehicle.service";
+import PedService from "Entity/service/Ped.service";
 
 class Core
 {
@@ -125,6 +127,42 @@ class Core
                 }
             });
             rej(`Couldn't find vehicle ...`);
+        });
+    }
+
+    // Peds
+
+    public constructPed = async (model: string, x:number, y: number, z: number, h: number, event: string): Promise<void> =>
+    {
+        try
+        {
+            const ped = await PedService.createPed(model, x, y, z, h);
+
+            this.entities.push(new Ped(ped, event));
+
+            console.log(this.entities);
+        }
+        catch(e)
+        {
+            console.log(`Error occurred: ${e}`);
+        }
+    }
+
+    public findPed = async (pNetId: number): Promise<Ped> =>
+    {
+        return new Promise((res, rej) =>
+        {
+            this.entities.forEach((entity: Entity) =>
+            {
+                if (entity.getNetId() == pNetId)
+                {
+                    if (entity instanceof Ped)
+                    {
+                        res(entity)
+                    }
+                }
+            });
+            rej(`Couldn't find ped ...`);
         });
     }
 
