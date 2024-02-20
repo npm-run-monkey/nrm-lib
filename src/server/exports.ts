@@ -1,3 +1,4 @@
+import Entity from "Entity/Entity";
 import Core from "Core/Core";
 import Ped from "Entity/classes/Ped";
 
@@ -21,9 +22,9 @@ global.exports('getPlayerCid', (pNetId: number): Promise<string> =>
     });
 });
 
-global.exports('constructPed', (model: string, x: number, y: number, z: number, h: number, event: string): void =>
+global.exports('constructPed', (model: string, x: number, y: number, z: number, h: number, entries: Entry[]): void =>
 {
-    Core.constructPed(model, x, y, z, h, event);
+    Core.constructPed(model, x, y, z, h, entries);
 });
 
 global.exports('findPed', (pNetId: number): Promise<Ped> =>
@@ -40,3 +41,18 @@ global.exports('findPed', (pNetId: number): Promise<Ped> =>
             }
         });
 });
+
+global.exports('findEntity', (netId: number): Promise<Entity> =>
+{
+    return new Promise(async (res, rej) =>
+    {
+        try
+        {
+            res(await Core.findEntity(netId));
+        }
+        catch(e)
+        {
+            rej(e)
+        }
+    })
+})

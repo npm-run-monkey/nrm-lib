@@ -11,7 +11,7 @@ RegisterCommand('sv', (source: number, args: any[], rawCommand: string) =>
     const coords = GetEntityCoords(ped);
     const heading = GetEntityHeading(ped);
 
-    Core.constructVehicle(args[0], coords[0], coords[1], coords[2], heading, pNetId, true);
+    Core.constructVehicle(args[0], coords[0], coords[1], coords[2], heading, pNetId, true, [ { name: "openen/sluiten", event: "nrm-lib:server:client:lockVehicle" }, { name: "open deuren", event: "nrm-lib:server:client:opendoors" } ]);
 }, false);
 
 RegisterCommand('dv', (source: number, args: any[], rawCommand: string) =>

@@ -32,3 +32,9 @@ interface SpawnCoordsResp
 {
     coordinates: SpawnCoords;
 }
+
+interface Entry
+{
+    name: string;
+    event: string;
+}

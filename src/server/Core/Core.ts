@@ -78,13 +78,13 @@ class Core
 
     // Vehicle
 
-    public constructVehicle = async (model: string, x:number, y: number, z: number, h: number, pNetId: number, warp: boolean): Promise<void> =>
+    public constructVehicle = async (model: string, x:number, y: number, z: number, h: number, pNetId: number, warp: boolean, entries?: Entry[]): Promise<void> =>
     {
         try
         {
             const vehicle: TVehicle = await vService.createVehicle(model, x, y, z, h, pNetId, warp); 
 
-            this.entities.push(new Vehicle(vehicle));
+            this.entities.push(new Vehicle(vehicle, pNetId, entries));
         }
         catch(e)
         {   
@@ -132,15 +132,13 @@ class Core
 
     // Peds
 
-    public constructPed = async (model: string, x:number, y: number, z: number, h: number, event: string): Promise<void> =>
+    public constructPed = async (model: string, x:number, y: number, z: number, h: number, entries?: Entry[]): Promise<void> =>
     {
         try
         {
             const ped = await PedService.createPed(model, x, y, z, h);
 
-            this.entities.push(new Ped(ped, event));
-
-            console.log(this.entities);
+            this.entities.push(new Ped(ped, entries));
         }
         catch(e)
         {
@@ -163,6 +161,22 @@ class Core
                 }
             });
             rej(`Couldn't find ped ...`);
+        });
+    }
+
+    // Entity
+
+    public findEntity = (netId: number): Promise<Entity> =>
+    {
+        return new Promise((res, rej) =>
+        {
+            this.entities.forEach((entity) => {
+                if (entity.getNetId() == netId)
+                {
+                    res(entity);
+                }
+            });
+            rej(`No entity ..`)
         });
     }
 

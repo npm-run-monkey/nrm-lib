@@ -2,16 +2,16 @@ import Entity from "Entity/Entity";
 
 class Ped extends Entity
 {
-    private readonly event: string;
+    private readonly entries: Entry[];
 
-    constructor(pNetId: number, event: string)
+    constructor(pNetId: number, entries?: Entry[])
     {
         super(pNetId);
 
-        this.event = event;
+        this.entries = entries ?? [];
     }
 
-    public getEvent = () => this.event;
+    public getEntries = () => this.entries;
 }
 
 export default Ped;
