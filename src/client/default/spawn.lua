@@ -84,16 +84,12 @@ end
 
 RegisterNetEvent('nrm-lib:server:client:spawnPlayer')
 
-AddEventHandler('nrm-lib:server:client:spawnPlayer', function(coords)
-    if (type(coords) == "string") then
-        coords = json.decode(coords)
-    end
-
+AddEventHandler('nrm-lib:server:client:spawnPlayer', function(x, y, z)
     spawnPlayer({    
-        x = coords.x,
-        y = coords.y,
-        z = coords.z,
-        heading = coords.h,
+        x = x,
+        y = y,
+        z = z,
+        heading = 180.00,
     })
 end)
 

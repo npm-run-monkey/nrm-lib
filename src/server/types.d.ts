@@ -25,12 +25,13 @@ interface SpawnCoords
     x: number;
     y: number;
     z: number;
-    h: number;
 }
 
 interface SpawnCoordsResp
 {
-    coordinates: SpawnCoords;
+    x: number;
+    y: number;
+    z: number;
 }
 
 interface Entry

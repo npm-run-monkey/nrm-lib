@@ -2,16 +2,15 @@ class SpawnManager
 {
     public spawnPlayer = async (pNetId: number): Promise<void> =>
     {
+        const start_time = GetGameTimer();
         try
         {
-            const coords = await this.getPlayerSpawnLocation(pNetId);
+            const { x, y, z } = await this.getPlayerSpawnLocation(pNetId);
 
-            if (typeof coords != "string")
-            {
-                JSON.stringify(coords);
-            }
+            emitNet('nrm-lib:server:client:spawnPlayer', pNetId, x, y, z);
+            const end_time = GetGameTimer() - start_time;
 
-            emitNet('nrm-lib:server:client:spawnPlayer', pNetId, coords);
+            console.log(end_time);
         }   
         catch(e)
         {
@@ -28,16 +27,16 @@ class SpawnManager
                 const coords = await this.getPlayerLocation(pNetId);
                 const cid = await global.exports['nrm-lib'].getPlayerCid(pNetId);
 
-                const resp: QueryRes<string> = await global.exports['nrm-db'].executeAsyncQuery(`SELECT coordinates FROM user_locations WHERE cid='${cid}'`);
+                const resp: QueryRes<string> = await global.exports['nrm-db'].executeAsyncQuery(`SELECT x FROM user_locations WHERE cid='${cid}'`);
 
                 if (resp.rowCount > 0)
                 {
-                    global.exports['nrm-db'].executeQuery(`UPDATE user_locations SET coordinates='${JSON.stringify(coords)}' WHERE cid='${cid}'`);
+                    global.exports['nrm-db'].executeQuery(`UPDATE user_locations SET x=${coords.x}, y=${coords.y}, z=${coords.z} WHERE cid='${cid}'`);
                     res(true)
                     return;
                 }
     
-                global.exports['nrm-db'].executeQuery(`INSERT INTO user_locations (cid, coordinates) VALUES ('${cid}', '${JSON.stringify(coords)}')`);
+                global.exports['nrm-db'].executeQuery(`INSERT INTO user_locations (cid, x, y, z) VALUES ('${cid}', ${coords.x}, ${coords.y}, ${coords.z})`);
     
                 res(true);
             }
@@ -54,13 +53,11 @@ class SpawnManager
         {
             const ped = GetPlayerPed(pNetId.toString());
             const coords = GetEntityCoords(ped);
-            const heading = GetEntityHeading(ped);
 
             res({
                 x: Number(coords[0].toFixed(2)), 
                 y: Number(coords[1].toFixed(2)), 
-                z: Number(coords[2].toFixed(2)), 
-                h: Number(heading.toFixed(2))
+                z: Number(coords[2].toFixed(2))
             })
         });
     }
@@ -72,13 +69,13 @@ class SpawnManager
             try
             {
                 const cid = await global.exports['nrm-lib'].getPlayerCid(pNetId);
-                const resp: QueryRes<SpawnCoordsResp> = await global.exports['nrm-db'].executeAsyncQuery(`SELECT coordinates FROM user_locations WHERE cid='${cid}'`);
+                const resp: QueryRes<SpawnCoordsResp> = await global.exports['nrm-db'].executeAsyncQuery(`SELECT x, y, z FROM user_locations WHERE cid='${cid}'`);
 
                 if (resp.rowCount > 0)
                 {
-                    res(resp.rows[0].coordinates);
+                    res( { x: resp.rows[0].x, y: resp.rows[0].y, z: resp.rows[0].z } );
                 }
-                res({ x: 466.84, y: 197.72, z: 111.52, h: 291.71 });
+                res( { x: 466.84, y: 197.72, z: 111.52 } );
             }
             catch(e)
             {

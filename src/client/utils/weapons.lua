@@ -15,6 +15,14 @@ function loadAnimDict(dict)
 	end
 end
 
+AddEventHandler('entityDamaged', function(victim, culprit, weapon, damage)
+    local ped = GetPlayerPed(-1)
+
+    if (IsPlayerDead(ped)) then 
+        giveWeaponToPed("none");
+    end
+end)
+
 giveWeaponToPed = function(weapon)
     local ped = GetPlayerPed(-1)
 
@@ -64,6 +72,7 @@ giveWeaponToPed = function(weapon)
 
         RemoveAllPedWeapons(ped, true)
         has_weapon = "none"
+        holstering = false
         return
     end
 

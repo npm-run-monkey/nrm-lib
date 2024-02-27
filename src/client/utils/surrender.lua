@@ -11,8 +11,19 @@ local loadDict = function(dict)
 	end
 end
 
+AddEventHandler('entityDamaged', function(victim, culprit, weapon, damage)
+    local ped = GetPlayerPed(-1)
+
+    if (IsPlayerDead(ped)) then 
+        handsup = false;
+        surrender = false;
+        busy = false;
+        ClearPedTasks(ped)
+    end
+end)
+
 RegisterCommand('handsup', function()
-    if (busy) then return end
+    if (busy or IsPedInAnyVehicle(GetPlayerPed(-1))) then return end
     busy = true
 
     local ped = GetPlayerPed(-1)
