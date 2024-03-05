@@ -14,7 +14,9 @@ end
 AddEventHandler('entityDamaged', function(victim, culprit, weapon, damage)
     local ped = GetPlayerPed(-1)
 
-    if (IsPlayerDead(ped)) then 
+    if (IsPedFatallyInjured(ped)) then 
+        --[[ Reset params if he is dead ]]--
+        
         handsup = false;
         surrender = false;
         busy = false;
@@ -22,29 +24,7 @@ AddEventHandler('entityDamaged', function(victim, culprit, weapon, damage)
     end
 end)
 
-RegisterCommand('handsup', function()
-    if (busy or IsPedInAnyVehicle(GetPlayerPed(-1))) then return end
-    busy = true
-
-    local ped = GetPlayerPed(-1)
-
-    giveWeaponToPed("none")
-
-    if (not handsup) then
-        loadDict("missminuteman_1ig_2")
-
-        TaskPlayAnim(ped, "missminuteman_1ig_2", "handsup_enter", 8.0, 8.0, 5000, 50, 0, false, false, false)
-
-        busy = false
-        handsup = true
-        return;
-    end
-
-    ClearPedTasks(ped)
-    handsup = false
-end)
-
---[[
+local puttinghandsup = false
 
 RegisterCommand('handsup', function()
     if (busy or IsPedInAnyVehicle(GetPlayerPed(-1))) then return end
@@ -54,26 +34,9 @@ RegisterCommand('handsup', function()
 
     giveWeaponToPed("none")
 
-    if (not handsup) then
-        loadDict("missminuteman_1ig_2")
+    if (puttinghandsup) then
+        --[[ Assuming double click X ]]--
 
-        TaskPlayAnim(ped, "missminuteman_1ig_2", "handsup_enter", 8.0, 8.0, 5000, 50, 0, false, false, false)
-
-        Citizen.CreateThread(function()
-            Citizen.Wait(5000)
-            if (not surrender) then
-                handsup = false
-                return;
-            end
-            return;
-        end)
-
-        busy = false
-        handsup = true
-        return;
-    end
-
-    if (handsup and not surrender) then
         ClearPedTasks(ped)
 
         loadDict( "random@arrests" )
@@ -92,23 +55,34 @@ RegisterCommand('handsup', function()
         return;
     end
 
-    loadDict( "random@arrests" )
-    loadDict("random@arrests@busted")
+    if (not handsup) then
+        puttinghandsup = true
+        loadDict("missminuteman_1ig_2")
 
-    TaskPlayAnim(ped, "random@arrests@busted", "exit", 8.0, 1.0, -1, 2, 0, 0, 0, 0 )
-    Wait(3000)
-    TaskPlayAnim(ped, "random@arrests", "kneeling_arrest_get_up", 8.0, 1.0, -1, 128, 0, 0, 0, 0 )
+        TaskPlayAnim(ped, "missminuteman_1ig_2", "handsup_enter", 8.0, 8.0, 5000, 50, 0, false, false, false)
+
+        busy = false
+        handsup = true
+
+        Citizen.Wait(500)
+        puttinghandsup = false
+
+        return;
+    end
+
+    if (surrender) then
+        loadDict( "random@arrests" )
+        loadDict("random@arrests@busted")
+    
+        TaskPlayAnim(ped, "random@arrests@busted", "exit", 8.0, 1.0, -1, 2, 0, 0, 0, 0 )
+        Wait(3000)
+        TaskPlayAnim(ped, "random@arrests", "kneeling_arrest_get_up", 8.0, 1.0, -1, 128, 0, 0, 0, 0 )
+    end
 
     ClearPedTasks(ped)
-    handsup = false
-    surrender = false
-    busy = false
-end)
-
-]]
-
-RegisterCommand('clr', function()
-    ClearPedTasks(GetPlayerPed(-1))
+    handsup = false;
+    surrender = false;
+    busy = false;
 end)
 
 local isSurrendering = function()

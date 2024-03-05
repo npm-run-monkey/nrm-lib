@@ -8,6 +8,54 @@ RegisterKeyMapping('inv', 'open inv', 'keyboard', '²')
 local has_weapon = "none";
 local holstering = false
 
+local policeHolstersV2 = { 
+    [1] = nil,
+    [2] = 8,
+    [3] = nil,
+    [4] = nil,
+    [5] = 6,
+    [6] = 7,
+    [7] = 6,
+    [8] = 2
+}
+
+local doesPlayerHasPoliceHolster = function()
+    local drawable = GetPedDrawableVariation(PlayerPedId(), 7)
+
+    for k, v in pairs(policeHolstersV2) do
+        if (v == drawable or k == drawable) then 
+            return true 
+        end
+    end
+    return false
+end
+
+local flipHolster = function()
+    local drawable = GetPedDrawableVariation(PlayerPedId(), 7)
+
+    for k, v in pairs(policeHolstersV2) do
+        if (v == drawable) then
+            SetPedComponentVariation(PlayerPedId(), 7, k, 0, 0)
+            return;
+        end
+        if (k == drawable) then
+            SetPedComponentVariation(PlayerPedId(), 7, v, 0, 0)
+            return;
+        end
+    end
+end
+
+local restoreHolster = function()
+    local drawable = GetPedDrawableVariation(PlayerPedId(), 7)
+
+    for k, v in pairs(policeHolstersV2) do
+        if (k == drawable) then
+            SetPedComponentVariation(PlayerPedId(), 7, v, 0, 0)
+            return;
+        end
+    end
+end
+
 function loadAnimDict(dict)
 	while ( not HasAnimDictLoaded(dict)) do
 		RequestAnimDict(dict)
@@ -18,8 +66,18 @@ end
 AddEventHandler('entityDamaged', function(victim, culprit, weapon, damage)
     local ped = GetPlayerPed(-1)
 
-    if (IsPlayerDead(ped)) then 
+    if (IsPedFatallyInjured(ped)) then 
         giveWeaponToPed("none");
+        restoreHolster()
+    end
+end)
+
+AddEventHandler('onClientResourceStart', function(resource)
+    if (resource == GetCurrentResourceName()) then
+        local has_weapon = "none";
+        local holstering = false
+        RemoveAllPedWeapons(GetPlayerPed(-1), true)
+        restoreHolster()
     end
 end)
 
@@ -36,89 +94,75 @@ giveWeaponToPed = function(weapon)
 
     if (has_weapon == weapon) then
         if (weapon == 'combatpistol' or weapon == 'stungun') then
-            loadAnimDict("rcmjosh4")
-            loadAnimDict("reaction@intimidation@cop@unarmed")
 
             holstering = true
 
-            Citizen.CreateThread(function()
-                while (holstering) do
-                    Citizen.Wait(10)
-                    DisableControlAction(0, 25, true)
-                    DisableControlAction(0, 24, true)
-                end
-            end)
+            if (doesPlayerHasPoliceHolster()) then
+                loadAnimDict("rcmjosh4")
+                loadAnimDict("reaction@intimidation@cop@unarmed")
+    
+                TaskPlayAnim(ped, "rcmjosh4", "josh_leadout_cop2", 8.0, 2.0, -1, 48, 10, 0, 0, 0 )
+                Citizen.Wait(500)
+                TaskPlayAnim(ped, "reaction@intimidation@cop@unarmed", "outro", 8.0, 2.0, -1, 30, 2.0, 0, 0, 0 )
+                Citizen.Wait(250)
+            else
+                loadAnimDict( "reaction@intimidation@1h" )
 
-            TaskPlayAnim(ped, "rcmjosh4", "josh_leadout_cop2", 8.0, 2.0, -1, 48, 10, 0, 0, 0 )
-            Citizen.Wait(500)
-            TaskPlayAnim(ped, "reaction@intimidation@cop@unarmed", "outro", 8.0, 2.0, -1, 50, 2.0, 0, 0, 0 )
-            Citizen.Wait(250)
-            ClearPedTasks(ped)
+                TaskPlayAnim(ped, "reaction@intimidation@1h", "outro", 8.0, 2.0, -1, 30, 10, 0, 0, 0 )
+                Citizen.Wait(2000)
+            end
 
             holstering = false
         end
 
-        if (weapon == 'combatpistol') then
-            local drawable = GetPedDrawableVariation(PlayerPedId(), 7)
-
-            if (drawable == 2) then
-                SetPedComponentVariation(PlayerPedId(), 7, 8, 0, 0)
-            end
-
-            if (drawable == 5) then
-                SetPedComponentVariation(PlayerPedId(), 7, 6, 0, 0)
-            end
-        end
+        flipHolster()
 
         RemoveAllPedWeapons(ped, true)
         has_weapon = "none"
         holstering = false
+
+        ClearPedTasks(ped)
+
         return
     end
 
     has_weapon = weapon
 
     if (has_weapon == 'combatpistol' or has_weapon == 'stungun') then
-        loadAnimDict("rcmjosh4")
-		loadAnimDict("reaction@intimidation@cop@unarmed")
-
         holstering = true
 
-        Citizen.CreateThread(function()
-            while (holstering) do
-                Citizen.Wait(10)
-                DisableControlAction(0, 25, true)
-                DisableControlAction(0, 24, true)
-            end
-        end)
-
-        GiveWeaponToPed(ped, GetHashKey('WEAPON_COMBATPISTOL'), 100, false, true);
-
-        TaskPlayAnim(ped, "reaction@intimidation@cop@unarmed", "intro", 8.0, 2.0, -1, 50, 2.0, 0, 0, 0 )
-        Citizen.Wait(450)
-        TaskPlayAnim(ped, "rcmjosh4", "josh_leadout_cop2", 8.0, 2.0, -1, 48, 10, 0, 0, 0 )
-        Citizen.Wait(400)
-        ClearPedTasks(ped)
-
         if (weapon == 'combatpistol') then
-            local drawable = GetPedDrawableVariation(PlayerPedId(), 7)
-
-            if (drawable == 8) then
-                SetPedComponentVariation(PlayerPedId(), 7, 2, 0, 0)
-            end
-
-            if (drawable == 6) then
-                SetPedComponentVariation(PlayerPedId(), 7, 5, 0, 0)
-            end
+            GiveWeaponToPed(ped, GetHashKey('WEAPON_COMBATPISTOL'), 100, false, true);
+        elseif (weapon == 'stungun') then
+            GiveWeaponToPed(ped, GetHashKey('WEAPON_STUNGUN'), 100, false, true);
+        else
+            print('lol')
         end
 
         Citizen.Wait(200)
 
-        holstering = false
-    end
+        if (doesPlayerHasPoliceHolster()) then
+            loadAnimDict("rcmjosh4")
+            loadAnimDict("reaction@intimidation@cop@unarmed")
 
-    if (has_weapon == 'stungun') then
-        GiveWeaponToPed(ped, GetHashKey('WEAPON_STUNGUN'), 100, false, true);
+            TaskPlayAnim(ped, "reaction@intimidation@cop@unarmed", "intro", 8.0, 2.0, -1, 30, 2.0, 0, 0, 0 )
+            Citizen.Wait(450)
+            TaskPlayAnim(ped, "rcmjosh4", "josh_leadout_cop2", 8.0, 2.0, -1, 48, 10, 0, 0, 0 )
+            Citizen.Wait(400)
+        else
+            loadAnimDict( "reaction@intimidation@1h" )
+
+            TaskPlayAnim(ped, "reaction@intimidation@1h", "intro", 8.0, 2.0, -1, 30, 10, 0, 0, 0 )
+            Citizen.Wait(2000)
+        end
+
+        flipHolster()
+
+        Citizen.Wait(200)
+
+        holstering = false
+
+        ClearPedTasks(ped)
     end
 
     if (has_weapon == 'nightstick') then
@@ -145,10 +189,6 @@ giveWeaponToPed = function(weapon)
     end)
 end
 
-RegisterCommand('cl', function()
-    RemoveAllPedWeapons(GetPlayerPed(-1), true)
-end)
-
 RegisterCommand('inv', function()
     print('Open inv')
     Citizen.Wait(5000)
@@ -156,23 +196,33 @@ RegisterCommand('inv', function()
 end)
 
 RegisterCommand('inv_slot1', function() 
-    giveWeaponToPed('combatpistol')
+    if (has_weapon == 'combatpistol' or has_weapon == "none") then
+        giveWeaponToPed('combatpistol')
+    end
 end)
 
 RegisterCommand('inv_slot2', function()
-    giveWeaponToPed('stungun')
+    if (has_weapon == 'stungun' or has_weapon == "none") then
+        giveWeaponToPed('stungun')
+    end
 end)
 
 RegisterCommand('inv_slot3', function()
-    giveWeaponToPed('nightstick')
+    if (has_weapon == 'nightstick' or has_weapon == "none") then
+        giveWeaponToPed('nightstick')
+    end
 end)
 
 RegisterCommand('inv_slot4', function()
-    giveWeaponToPed('flashlight')
+    if (has_weapon == 'flashlight' or has_weapon == "none") then
+        giveWeaponToPed('flashlight')
+    end
 end)
 
 RegisterCommand('inv_slot5', function()
-    giveWeaponToPed('knife')
+    if (has_weapon == 'knife' or has_weapon == "none") then
+        giveWeaponToPed('knife')
+    end
 end)
 
 exports('giveWeaponToPed', giveWeaponToPed);
