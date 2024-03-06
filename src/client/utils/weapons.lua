@@ -184,6 +184,7 @@ giveWeaponToPed = function(weapon)
             if (IsPedInAnyVehicle(ped, true)) then
                 has_weapon = "none";
                 RemoveAllPedWeapons(ped, true)
+                restoreHolster()
             end
         end
     end)
