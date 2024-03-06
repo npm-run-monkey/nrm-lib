@@ -59,7 +59,7 @@ RegisterCommand('handsup', function()
         puttinghandsup = true
         loadDict("missminuteman_1ig_2")
 
-        TaskPlayAnim(ped, "missminuteman_1ig_2", "handsup_enter", 8.0, 8.0, 5000, 50, 0, false, false, false)
+        TaskPlayAnim(ped, "missminuteman_1ig_2", "handsup_enter", 8.0, 8.0, -1, 50, 0, false, false, false)
 
         busy = false
         handsup = true
