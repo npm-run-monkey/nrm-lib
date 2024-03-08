@@ -1,23 +1,7 @@
 RegisterNetEvent('nrm-lib:server:client:lockVehicle')
 
 AddEventHandler('nrm-lib:server:client:lockVehicle', function(entity)
-    print(entity)
 	TriggerServerEvent('nrm-lib:client:server:lockVehicle', NetworkGetNetworkIdFromEntity(entity));
-end)
-
-RegisterNetEvent('nrm-lib:server:client:opendoors')
-
-AddEventHandler('nrm-lib:server:client:opendoors', function(entity)
-    for i = 0, 5 do
-        if (IsVehicleDoorFullyOpen(entity, i)) then
-            setvehicledoorshut(entity, i, false);
-        end
-
-        if (not IsVehicleDoorFullyOpen(entity, i)) then
-            SetVehicleDoorOpen(entity, i, false, false)
-            Citizen.Wait(500)
-        end 
-      end
 end)
 
 local playVehicleLockAnimation = function()
