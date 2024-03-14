@@ -1,4 +1,5 @@
 import Core from "Core/Core";
+import Weather from "Weather/Weather";
 
 RegisterCommand('sv', (source: number, args: any[], rawCommand: string) =>
 {
@@ -30,3 +31,27 @@ RegisterCommand('dv', (source: number, args: any[], rawCommand: string) =>
     Core.destructVehicle(vehicle);
 
 }, false);
+
+RegisterCommand('morning', (source: number, args: any[], rawCommand: string) =>
+{
+    if (source != 0) return;
+    Weather.setMorning();
+}, false);
+
+RegisterCommand('noon', (source: number, args: any[], rawCommand: string) =>
+{
+    if (source != 0) return;
+    Weather.setNoon();
+}, false);
+
+RegisterCommand('evening', (source: number, args: any[], rawCommand: string) =>
+{
+    if (source != 0) return;
+    Weather.setEvening();
+}, false);
+
+RegisterCommand('night', (source: number, args: any[], rawCommand: string) =>
+{
+    if (source != 0) return;
+    Weather.setNight();
+}, false)

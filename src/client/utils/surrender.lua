@@ -57,6 +57,7 @@ RegisterCommand('handsup', function()
 
     if (not handsup) then
         puttinghandsup = true
+        exports["nrm-lib"].restoreHolster()
         loadDict("missminuteman_1ig_2")
 
         TaskPlayAnim(ped, "missminuteman_1ig_2", "handsup_enter", 8.0, 8.0, -1, 50, 0, false, false, false)

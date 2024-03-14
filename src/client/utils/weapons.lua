@@ -16,7 +16,7 @@ local policeHolstersV2 = {
     [5] = 6,
     [6] = 7,
     [7] = 6,
-    [8] = 2
+    [8] = nil
 }
 
 local doesPlayerHasPoliceHolster = function()
@@ -227,3 +227,4 @@ RegisterCommand('inv_slot5', function()
 end)
 
 exports('giveWeaponToPed', giveWeaponToPed);
+exports('restoreHolster', restoreHolster)
